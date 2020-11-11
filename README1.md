@@ -2,19 +2,13 @@
 
 
 ## Environment
-We are running our baseline models on AWS EC2 G4 instances with Pytorch 1.6.0. Below are some packages you might need to install for running the baseline models
-
-```bash
-python -m pip install cityscapesscripts
-pip install mmcv-full
-```
+We are running our baseline models on AWS EC2 G4 instances with Pytorch 1.6.0.
 
 ## Dataset
 The dataset we are currently using is Cityscapes, you can download it with from https://www.cityscapes-dataset.com/ or you can simply run the following commands.
 
 ```bash
-wget --keep-session-cookies --save-cookies=cookies.txt \
-    --post-data 'username=yourusername&password=yourpassword&submit=Login'https://www.cityscapes-dataset.com/login/
+wget --keep-session-cookies --save-cookies=cookies.txt --post-data 'username=yourusername&password=yourpassword&submit=Login' https://www.cityscapes-dataset.com/login/
 wget --load-cookies cookies.txt --content-disposition https://www.cityscapes-dataset.com/file-handling/?packageID=1
 wget --load-cookies cookies.txt --content-disposition https://www.cityscapes-dataset.com/file-handling/?packageID=3
 unzip leftImg8bit_trainvaltest.zip && rm leftImg8bit_trainvaltest.zip
@@ -33,15 +27,19 @@ The final file structure will be:
    
 ## Running
 
-### Train DeepLabv3+ with ResNet50 backbone:
+### Train FCN-8s with ResNet50 backbone:
 ```bash
-./tools/dist_train.sh configs/deeplabv3plus/deeplabv3plus_r50-d8_512x1024_80k_cityscapes.py 1
+./tools/dist_train.sh configs/fcn/fcn_r50-d8_512x1024_40k_cityscapes.py 1
 ```
 
-### Evaluate DeepLabv3+:
+### Evaluate FCN-8s with ResNet50 backbone with the .pth file generated from training:
 ```bash
-python tools/test.py configs/deeplabv3plus/deeplabv3plus_r50-d8_512x1024_80k_cityscapes.py \
+python tools/test.py configs/fcn/fcn_r50-d8_512x1024_40k_cityscapes.py \
     checkpoints/FileGeneratedInTraining.pth\
     --eval mIoU cityscapes
 ```
-For running DeepLabv3+ with ResNet101 backbone and FCN-8s, you can also run similar commands above.
+For running FCN-8s with ResNet101 backbone, you can also run similar commands above for fcn_r101-d8_512x1024_40k_cityscapes.py.
+
+## FCN-8s Model Structure
+ResNetV1c(backbone) --> MaxPool2d --> ResLayer * 4 --> FCNHead(decode head) --> FCNHead(auxiliary head)
+SGD, lr=0.01, momentum=0.9, weight_decay=0.0005, epoch=108
