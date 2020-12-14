@@ -1,6 +1,5 @@
 # Semantic Segmentation for Urban-Scene Images
 
-
 ## Environment
 We are running our baseline models on AWS EC2 g4dn.12xlarge (4GPUs) instances with Pytorch 1.4.0.
 
