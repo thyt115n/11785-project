@@ -1,6 +1,7 @@
 """
 Evaluation Script
-Support Two Modes: Pooling based inference and sliding based inference
+Support: 1) Deeplabv3+, 2) ASPP + HANet + Deeplabv3+, 3) WASP + HANet + Deeplabv3+
+
 """
 import os
 import logging

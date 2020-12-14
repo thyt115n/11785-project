@@ -1,5 +1,6 @@
 """
 training code
+support: 1) ASPP + HANet + Deeplabv3+, 2) WASP + HANet + Deeplabv3+
 """
 from __future__ import absolute_import
 from __future__ import division
