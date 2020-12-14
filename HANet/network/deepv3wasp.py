@@ -1,6 +1,6 @@
 """
 # Code Adapted from:
-# https://github.com/sthalles/deeplab_v3
+# https://github.com/sthalles/deeplab_v3 and https://github.com/bmartacho/WASP
 #
 # MIT License
 #
@@ -30,7 +30,8 @@ from network import Resnet
 from network.PosEmbedding import PosEmbedding2D
 from network.HANet import HANet_Conv
 from network.mynn import initialize_weights, Norm2d, Upsample, freeze_weights, unfreeze_weights, RandomPosVal_Masking, RandomVal_Masking, Zero_Masking, RandomPosZero_Masking
-
+from network.sync_batchnorm.batchnorm import SynchronizedBatchNorm2d
+from network.wasp import build_wasp
 
 import torchvision.models as models
 
@@ -108,7 +109,7 @@ class DeepV3PlusHANet(nn.Module):
     """
 
     def __init__(self, num_classes, trunk='resnet-101', criterion=None, criterion_aux=None,
-                variant='D', skip='m1', skip_num=48, args=None):
+                variant='D', skip='m1', skip_num=48, args=None, sync_bn=True):
         super(DeepV3PlusHANet, self).__init__()
         self.criterion = criterion
         self.criterion_aux = criterion_aux
@@ -324,8 +325,14 @@ class DeepV3PlusHANet(nn.Module):
         else:
             os = 32
 
-        self.aspp = _AtrousSpatialPyramidPoolingModule(final_channel, 256,
-                                                    output_stride=os)
+        # self.aspp = _AtrousSpatialPyramidPoolingModule(final_channel, 256,
+        #                                             output_stride=os)
+
+        if sync_bn == True:
+            BatchNorm = SynchronizedBatchNorm2d
+        else:
+            BatchNorm = nn.BatchNorm2d
+        self.wasp = build_wasp( final_channel, output_stride=os, BatchNorm=BatchNorm)
 
         self.bot_fine = nn.Sequential(
             nn.Conv2d(channel_3rd, 48, kernel_size=1, bias=False),
@@ -398,7 +405,7 @@ class DeepV3PlusHANet(nn.Module):
                             dropout_prob=self.args.dropout, pos_noise=self.args.pos_noise)
             initialize_weights(self.hanet4)
 
-        initialize_weights(self.aspp)
+        # initialize_weights(self.aspp)
         initialize_weights(self.bot_aspp)
         initialize_weights(self.bot_fine)
         initialize_weights(self.final1)
@@ -433,7 +440,9 @@ class DeepV3PlusHANet(nn.Module):
 
         represent = x
 
-        x = self.aspp(x)
+        # print('x.shape, prev', x.shape)
+        x = self.wasp(x)
+        # print('x.shape', x.shape)
 
         if self.args.hanet[1]==1:
             if attention_map:
@@ -443,7 +452,7 @@ class DeepV3PlusHANet(nn.Module):
                 x = self.hanet1(represent, x, pos)
             
         dec0_up = self.bot_aspp(x)
-
+        # print(dec0_up.shape)
         if self.args.hanet[2]==1:
             if attention_map:
                 dec0_up, attention_maps[map_index], pos_maps[map_index] = self.hanet2(x, dec0_up, pos, return_attention=True, return_posmap=True)
