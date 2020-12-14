@@ -1,4 +1,4 @@
-# Instruction for running baseline models
+# Semantic Segmentation for Urban-Scene Images
 
 
 ## Environment
@@ -49,10 +49,10 @@ gdown https://drive.google.com/uc?id=1jMx3HdVqSlpIYIyG3VPi8q-ZiclOHlc7
 You can run the following commands to train our two variants of model from scratch. You can change the CUDA_VISIBLE_DEVICES according to your devices.
 ```bash
 # train ASPP + HANet + Deeplabv3+
-CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_r101_os16_hanet.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_aspp.sh
 
 # train WASP + HANet + Deeplabv3+
-CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_r101_os16_hanet_wasp.sh
+CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_wasp.sh
 ```
 
 
@@ -61,12 +61,12 @@ You can also directly use our trained models to do the evaluation. Please first 
 
 ```bash
 # evaluate with baseline Deeplabv3+
-CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_r101_os16_baseline.sh ./pretrained/baseline_0.77801.pth ./results/baseline
+CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_baseline.sh ./pretrained/baseline_0.77801.pth ./results/baseline
 
 # evaluate with ASPP + HANet + Deeplabv3+
-CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_r101_os16.sh ./pretrained/aspp_0.78932.pth ./results/aspp
+CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_aspp.sh ./pretrained/aspp_0.78932.pth ./results/aspp
 
 # evaluate with WASP + HANet + Deeplabv3+
-CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_r101_wasp_os16.sh ./pretrained/wasp_0.79279.pth ./resultss/wasp
+CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/eval_wasp.sh ./pretrained/wasp_0.79279.pth ./resultss/wasp
 
 ```
