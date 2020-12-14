@@ -45,7 +45,7 @@ pip install gdown
 gdown https://drive.google.com/uc?id=1jMx3HdVqSlpIYIyG3VPi8q-ZiclOHlc7
 ```
 
-### Train:
+## Train:
 You can run the following commands to train our two variants of model from scratch. You can change the CUDA_VISIBLE_DEVICES according to your devices.
 ```bash
 # train ASPP + HANet + Deeplabv3+
@@ -56,7 +56,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_r101_os16_hanet_wasp.sh
 ```
 
 
-### Evaluation
+## Evaluation
 You can also directly use our trained models to do the evaluation. Please first download our saved model from [our google drive](https://drive.google.com/drive/folders/13wakyxZFfWWZ2DddAuMBTQoi9mydc157?usp=sharing) and put it in the results directory accordingly.
 
 ```bash
