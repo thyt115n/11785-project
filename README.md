@@ -39,7 +39,7 @@ _C.DATASET.CITYSCAPES_DIR = <YOUR_CITYSCAPES_PATH>
 ```
 
 ## Download Pretrained model
-Use the following command to download the pretrained model in the pretrained folder
+Use the following command to download the pretrained model "resnet101-imagenet.pth" and put it in the "pretrained" folder
 ```bash
 pip install gdown
 gdown https://drive.google.com/uc?id=1jMx3HdVqSlpIYIyG3VPi8q-ZiclOHlc7
@@ -57,7 +57,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 ./scripts/train_wasp.sh
 
 
 ## Evaluation
-You can also directly use our trained models to do the evaluation. Please first download our saved model from [our google drive](https://drive.google.com/drive/folders/13wakyxZFfWWZ2DddAuMBTQoi9mydc157?usp=sharing) and put it in the results directory accordingly.
+You can also directly use our trained models to do the evaluation. Please first download our saved model from [our google drive](https://drive.google.com/drive/folders/13wakyxZFfWWZ2DddAuMBTQoi9mydc157?usp=sharing) and put it into ths sub-directory in the "results" directory accordingly.
 
 ```bash
 # evaluate with baseline Deeplabv3+
